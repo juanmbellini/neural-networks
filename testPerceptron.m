@@ -1,4 +1,4 @@
-function [o] = testPerceptron(psi, W, g)
+function [o] = testPerceptron(psi, W, g, denormalizer)
 
     M = length(W);
     V = cell(1,M);
@@ -17,6 +17,6 @@ function [o] = testPerceptron(psi, W, g)
        end
     end
     
-    o = V{m};
+    o = denormalizer(V{m});
 
 end

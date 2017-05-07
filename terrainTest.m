@@ -29,34 +29,29 @@ g = tangHyp;
 gDeriv = tangHypDeriv;
 
 hiddenLayerSizes = [6 4 4 4];
-error = 1;
+error = 0.1;
 
+normalizer = @(x) 0.1*(x + 10)-1;
+denormalizer = @(x) ((x+1)/0.1)-10;
 
-W = backpropagation(psiTrain, sTrain, n, error, iterations, hiddenLayerSizes, g, gDeriv);
-
-%{
-for i = 1:141
-   [sTest(:,i) testPerceptron(psiTest(i,:), W, g)]
-end
-%}
+W = backpropagation(psiTrain, sTrain, n, error, iterations, hiddenLayerSizes, g, gDeriv, normalizer);
 
 testedValues = zeros(441,1);
 for i = 1:441
-   testedValues(i,1) = testPerceptron(psi(i,:), W, g);
+   testedValues(i,1) = testPerceptron(psi(i,:), W, g, denormalizer);
 end
-testedValues = testedValues*10;
 
 %plot3(psi(:,1), psi(:,2), testedValues, 'ro');
 
-
+%{
 plot(testedValues', 'ro');
 hold on
 plot(s,'g+');
+%}
 
-%{
 [xx,yy]=meshgrid(-2:0.1:2,-2:0.1:2);
 zz = griddata(psi(:,1), psi(:,2), testedValues, xx, yy);
 surf(xx,yy,zz)
-%}
+
 
 

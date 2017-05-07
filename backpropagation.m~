@@ -5,10 +5,11 @@
 %% g: transference function
 %% gDeriv: derivative of the transference function
 
-function[W] = backpropagation(psi, s, n, error, iterations, hiddenLayerSizes, g, gDeriv, sNormalizer)
-
-    s = sNormalizer(s);
+function[W] = backpropagation(psi, s, n, error, iterations, hiddenLayerSizes, g, gDeriv)
+    s = s/10;
     
+    s = (b - a)*(s-
+
     layerSizes = [length(psi(1,:)) hiddenLayerSizes length(s(:,1))];
 
     M = length(layerSizes);

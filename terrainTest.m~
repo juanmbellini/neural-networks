@@ -29,22 +29,23 @@ g = tangHyp;
 gDeriv = tangHypDeriv;
 
 hiddenLayerSizes = [6 4 4 4];
-error = 2;
+error = 0.1;
 
+normalizer = @(x) 0.1*(x + 10)-1;
+denormalizer = @(x) ((x+1)/0.1) - 10;
 
-W = backpropagation(psiTrain, sTrain, n, error, iterations, hiddenLayerSizes, g, gDeriv);
+W = backpropagation(psiTrain, sTrain, n, error, iterations, hiddenLayerSizes, g, gDeriv, normalizer);
 
 %{
 for i = 1:141
    [sTest(:,i) testPerceptron(psiTest(i,:), W, g)]
 end
 %}
-
+s = normalizer(s);
 testedValues = zeros(441,1);
 for i = 1:441
    testedValues(i,1) = testPerceptron(psi(i,:), W, g);
 end
-testedValues = testedValues*10;
 
 %plot3(psi(:,1), psi(:,2), testedValues, 'ro');
 
