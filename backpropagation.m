@@ -20,6 +20,8 @@ function[W] = backpropagation(psi, s, n, error, iterations, hiddenLayerSizes, g,
     Delta = cell(1,M);
     o = zeros(length(s(:,1)),length(s));
     
+    diff = o - s;
+    
     finish = false;
     
     for m = 2:M
@@ -44,7 +46,7 @@ function[W] = backpropagation(psi, s, n, error, iterations, hiddenLayerSizes, g,
                  V{m} = [-1; V{m}];
                end
            end
-           
+           V{M} = V{M}*10;
            %% paso 4
            Delta{M} = gDeriv(H{M}).*(s(:,i)-V{M});
            
@@ -60,8 +62,9 @@ function[W] = backpropagation(psi, s, n, error, iterations, hiddenLayerSizes, g,
            
            
            o(:,i) = V{M};
+           diff = o - s;
            
-           if(abs(s - o) < error)
+           if(abs(diff) < error)
                finish = true;
            end
            

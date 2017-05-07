@@ -17,6 +17,6 @@ function [o] = testPerceptron(psi, W, g)
        end
     end
     
-    o = V{m};x
+    o = V{m};
 
 end

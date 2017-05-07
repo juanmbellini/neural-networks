@@ -29,7 +29,7 @@ g = tangHyp;
 gDeriv = tangHypDeriv;
 
 hiddenLayerSizes = [6 4 4 4];
-error = 1;
+error = 2;
 
 
 W = backpropagation(psiTrain, sTrain, n, error, iterations, hiddenLayerSizes, g, gDeriv);
