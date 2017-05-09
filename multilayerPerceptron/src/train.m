@@ -5,14 +5,13 @@
     A = importdata(filename,delimiterIn,headerlinesIn);
     terrain = A.data;
 
+    trainingSize = 300;
     s = terrain(:,3)';
     total = length(s);
-    sTrain = s(:,1:300);
-    sTest = s(:,301:total);
+    sTrain = s(:,1:trainingSize);
     
     psi = terrain(:,1:2);
-    psiTrain = psi(1:300,:);
-    psiTest = psi(301:total,:);
+    psiTrain = psi(1:trainingSize,:);
 
     n = 0.05;
     beta = 1;

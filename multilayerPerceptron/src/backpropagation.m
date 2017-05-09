@@ -33,7 +33,7 @@ function[W, meanErrors] = backpropagation(psi, s, n, error, iterations, hiddenLa
        W{m} = rand([layerSizes(m) (layerSizes(m-1)+1)]) - 0.5;
     end
     
-    while(c ~= iterations && ~finish)
+    while(epoch ~= iterations && ~finish)
        epoch = epoch+1;
        indexes = randperm(length(s));
        
