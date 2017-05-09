@@ -1,6 +1,7 @@
 function normalizers = normalizers()
     normalizers.normalizer = @normalizer;
     normalizers.tangHypNormalizerFromMinus10_10 = @tangHypNormalizerFromMinus10_10;
+    normalizers.expoNormalizerFromMinus10_10 = @expoNormalizerFromMinus10_10;
     normalizers.entryNormalizerFromMinus4_4 = @entryNormalizerFromMinus4_4;
 end
 
@@ -10,6 +11,10 @@ end
 
 function[ret] = tangHypNormalizerFromMinus10_10(x)
     ret = normalizer(x,-0.9,0.9,-10,10);
+end
+
+function[ret] = expoNormalizerFromMinus10_10(x)
+    ret = normalizer(x,0.1,0.9,-10,10);
 end
 
 function[ret] = entryNormalizerFromMinus4_4(x)
