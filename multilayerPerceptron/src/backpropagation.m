@@ -5,7 +5,7 @@
 %% g: transference function
 %% gDeriv: derivative of the transference function
 
-function[W] = backpropagation(psi, s, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer)
+function[W, meanErrors] = backpropagation(psi, s, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer)
 
     psi = psiNormalizer(psi);
     s = sNormalizer(s);
@@ -24,24 +24,26 @@ function[W] = backpropagation(psi, s, n, error, iterations, hiddenLayerSizes, g,
     o = zeros(length(s(:,1)),length(s));
     
     diff = o - s;
+    meanErrors = [];
     
     finish = false;
+    epoch = 0;
     
     for m = 2:M
        W{m} = rand([layerSizes(m) (layerSizes(m-1)+1)]) - 0.5;
     end
     
-    while(iterations > 0 && ~finish)
-       iterations = iterations - 1;
+    while(c ~= iterations && ~finish)
+       epoch = epoch+1;
        indexes = randperm(length(s));
        
        for i = indexes
           
-           %% paso 2
+           %% step 2
            V{1} = psi(i,:)';
            V{1} = [-1; V{1}];
            
-           %% paso 3
+           %% step 3
            for m = 2:M
                H{m} = W{m}*V{m-1};
                V{m} = g(H{m});
@@ -50,15 +52,15 @@ function[W] = backpropagation(psi, s, n, error, iterations, hiddenLayerSizes, g,
                end
            end
            
-           %% paso 4
+           %% step 4
            Delta{M} = gDeriv(H{M}).*(s(:,i)-V{M});
            
-           %% paso 5
+           %% step 5
            for m = M:-1:3
               Delta{m-1} = gDeriv(H{m-1}).*(W{m}(:,2:end)'*Delta{m});
            end
            
-           %% paso 6
+           %% step 6
            for m = 2:M    
                W{m} = W{m} + n*Delta{m}*(V{m-1}');
            end
@@ -72,7 +74,10 @@ function[W] = backpropagation(psi, s, n, error, iterations, hiddenLayerSizes, g,
            end
            
        end
-        
+       
+       meanErrors = [meanErrors mean(abs(diff))];
+       
     end
+    epoch
 
 end
