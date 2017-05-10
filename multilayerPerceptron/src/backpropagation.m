@@ -30,7 +30,8 @@ function[W, meanErrors] = backpropagation(psi, s, n, error, iterations, hiddenLa
     epoch = 0;
     
     for m = 2:M
-       W{m} = rand([layerSizes(m) (layerSizes(m-1)+1)]) - 0.5;
+       limit = (layerSizes(m-1)+1)^(1/2);
+       W{m} = rand([layerSizes(m) (layerSizes(m-1)+1)])*2*limit - limit;
     end
     
     while(epoch ~= iterations && ~finish)
@@ -79,5 +80,7 @@ function[W, meanErrors] = backpropagation(psi, s, n, error, iterations, hiddenLa
        
     end
     epoch
+    quadraticMeanError = mean(diff.^2);
+    quadraticMeanError
 
 end
