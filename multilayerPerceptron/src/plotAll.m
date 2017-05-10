@@ -2,6 +2,8 @@ function [] = plotAll(psi, s, trainingMeanErrors, testedValues)
 
     subplot(2,2,1);
     plot(testedValues', 'ro');
+    quadraticMeanError = mean((s'-testedValues).^2);
+    quadraticMeanError
     hold on
     plot(s,'g+');
     title('Real and calculated values');
@@ -10,7 +12,6 @@ function [] = plotAll(psi, s, trainingMeanErrors, testedValues)
     plot(abs(testedValues' - s),'ro');
     title('Testing error');
     ylabel('error');
-
 
     subplot(2,2,3);
     [xx,yy]=meshgrid(-4:0.1:4,-4:0.1:4);
