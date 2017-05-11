@@ -17,39 +17,22 @@
 
     n = 0.05;
     beta = 1;
-    iterations = 5000;
+    iterations = 4000;
 
     activationFunctions = activationFunctions();
     normalizers = normalizers();
     denormalizers = denormalizers();
 
-    g = activationFunctions.tangHyp;
-    gDeriv = activationFunctions.tangHypDeriv;
+    g = activationFunctions.expo;
+    gDeriv = activationFunctions.expoDeriv;
 
-    hiddenLayerSizes = [5 20 5];
+    hiddenLayerSizes = [7 7];
     error = 0;
 
-    psiNormalizer = normalizers.entryTangHypNormalizerFromMinus4_4;
-    sNormalizer = normalizers.tangHypNormalizerFromMinus10_10;
-    denormalizer = denormalizers.tangHypDenormalizerToMinus10_10;
-    
-    %for momentum
-    alfa = 0.9;
-    
-    %for adaptive learning rate
-    a=0.08;
-    b=0.3;
+    psiNormalizer = normalizers.entryExpoNormalizerFromMinus4_4;
+    sNormalizer = normalizers.expoNormalizerFromMinus10_10;
+    denormalizer = denormalizers.expoDenormalizerToMinus10_10;
 
-    %%normal backpropagation
-    %[W, trainingMeanErrors] = backpropagation(psiTrain, sTrain, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer);
-    
-    %%backpropagation with momentum
-    [W, trainingMeanErrors] = momentumBackpropagation(psiTrain, sTrain, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer, alfa);
-    
-    %%backpropagation with adaptive learning rate
-    %[W, trainingMeanErrors] = adaptiveBackpropagation(psiTrain, sTrain, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer, a, b);
-    
-    %backpropagation with adaptive learning rate and momentum
-    %[W, trainingMeanErrors] = bestBackpropagation(psiTrain, sTrain, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer, a, b, alfa);
-   
-    save('./nets/net_9_9_9_hyp.mat','W','psi','s','trainingMeanErrors','g','gDeriv','psiNormalizer','sNormalizer','denormalizer','trainingSize','sTest','psiTest');
+    [W, trainingMeanErrors, testingMeanErrors] = backpropagation(psiTrain, psiTest, sTrain, sTest, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer,denormalizer);
+
+    save('./nets/net_7_7_expo_funcactivacion.mat','W','trainingMeanErrors', 'testingMeanErrors','g','gDeriv','psiNormalizer','sNormalizer','denormalizer','trainingSize','s','psi','sTest','psiTest','sTrain','psiTrain');
