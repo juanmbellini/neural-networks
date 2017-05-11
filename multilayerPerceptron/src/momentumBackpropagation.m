@@ -5,7 +5,9 @@
 %% g: transference function
 %% gDeriv: derivative of the transference function
 
-function[W, meanErrors] = momentumBackpropagation(psi, s, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer)
+function[W, meanErrors] = momentumBackpropagation(psi, s, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer, alfa)
+
+    disp('momentum backpropagation');
 
     psi = psiNormalizer(psi);
     s = sNormalizer(s);
@@ -26,8 +28,6 @@ function[W, meanErrors] = momentumBackpropagation(psi, s, n, error, iterations, 
     o = zeros(length(s(:,1)),length(s));
    
     finish = false;
-    
-    alfa = 0.9;
     
     DeltaW = cell(1,M);
     
@@ -77,7 +77,6 @@ function[W, meanErrors] = momentumBackpropagation(psi, s, n, error, iterations, 
                %add momentum term
                DeltaW{m} = n*Delta{m}*(V{m-1}') + (alfa * DeltaWOld{m});
                W{m} = W{m} + DeltaW{m};
-               
            end
            DeltaWOld = DeltaW;
            
@@ -91,8 +90,10 @@ function[W, meanErrors] = momentumBackpropagation(psi, s, n, error, iterations, 
        end
        
        
-        
+        meanErrors = [meanErrors mean(abs(diff))];
     end
-    epoch
-
+    disp(epoch);
+    quadraticMeanError = mean(diff.^2);
+    disp(quadraticMeanError);
+    disp(mean(abs(o-s)));
 end

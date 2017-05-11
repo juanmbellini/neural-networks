@@ -17,7 +17,7 @@
 
     n = 0.05;
     beta = 1;
-    iterations = 2000;
+    iterations = 5000;
 
     activationFunctions = activationFunctions();
     normalizers = normalizers();
@@ -26,15 +26,30 @@
     g = activationFunctions.tangHyp;
     gDeriv = activationFunctions.tangHypDeriv;
 
-    hiddenLayerSizes = [9 9 9];
+    hiddenLayerSizes = [5 20 5];
     error = 0;
 
     psiNormalizer = normalizers.entryTangHypNormalizerFromMinus4_4;
     sNormalizer = normalizers.tangHypNormalizerFromMinus10_10;
     denormalizer = denormalizers.tangHypDenormalizerToMinus10_10;
+    
+    %for momentum
+    alfa = 0.9;
+    
+    %for adaptive learning rate
+    a=0.08;
+    b=0.3;
 
-    [W, trainingMeanErrors] = backpropagation(psiTrain, sTrain, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer);
-
+    %%normal backpropagation
+    %[W, trainingMeanErrors] = backpropagation(psiTrain, sTrain, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer);
+    
+    %%backpropagation with momentum
+    [W, trainingMeanErrors] = momentumBackpropagation(psiTrain, sTrain, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer, alfa);
+    
+    %%backpropagation with adaptive learning rate
+    %[W, trainingMeanErrors] = adaptiveBackpropagation(psiTrain, sTrain, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer, a, b);
+    
+    %backpropagation with adaptive learning rate and momentum
+    %[W, trainingMeanErrors] = bestBackpropagation(psiTrain, sTrain, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer, a, b, alfa);
+   
     save('./nets/net_9_9_9_hyp.mat','W','psi','s','trainingMeanErrors','g','gDeriv','psiNormalizer','sNormalizer','denormalizer','trainingSize','sTest','psiTest');
-
-

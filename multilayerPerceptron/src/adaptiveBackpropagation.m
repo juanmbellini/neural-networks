@@ -5,7 +5,9 @@
 %% g: transference function
 %% gDeriv: derivative of the transference function
 
-function[W, meanErrors] = adaptiveBackpropagation(psi, s, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer)
+function[W, meanErrors] = adaptiveBackpropagation(psi, s, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer, a, b)
+
+    backpropagation('adaptive backpropagation');
 
     psi = psiNormalizer(psi);
     s = sNormalizer(s);
@@ -28,8 +30,8 @@ function[W, meanErrors] = adaptiveBackpropagation(psi, s, n, error, iterations, 
     improvementCounter = 0;
     maxImprovement = 1;
    
-    a=0.08;
-    b=0.3;
+%     a=0.08;
+%     b=0.3;
     
     finish = false;
     
@@ -103,8 +105,11 @@ function[W, meanErrors] = adaptiveBackpropagation(psi, s, n, error, iterations, 
        Wold = W;
        prevError = currentError;
           
-        
+        meanErrors = [meanErrors mean(abs(currentError))];
     end
-    epoch
+    disp(epoch);
+    quadraticMeanError = mean((s-o).^2);
+    disp(quadraticMeanError);
+    disp(mean(abs(o-s)));
 
 end

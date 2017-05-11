@@ -5,10 +5,10 @@
 %% g: transference function
 %% gDeriv: derivative of the transference function
 
-function[W, meanErrors] = backpropagation(psi, s, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer)
+function[W, meanErrors] = bestBackpropagation(psi, s, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer, a, b, alfa)
 
-    disp('backpropagation');
-
+    disp('best backpropagation');
+    
     psi = psiNormalizer(psi);
     s = sNormalizer(s);
     
@@ -25,19 +25,33 @@ function[W, meanErrors] = backpropagation(psi, s, n, error, iterations, hiddenLa
     Delta = cell(1,M);
     o = zeros(length(s(:,1)),length(s));
     
-    diff = o - s;
-    meanErrors = [];
+    currentError = mean(abs(o - s));
+    prevError = currentError;
+    improvementCounter = 0;
+    maxImprovement = 1;
+   
+%     a=0.08;
+%     b=0.3;
     
     finish = false;
+    
+    DeltaW = cell(1,M);
+    
+    meanErrors = [];
     epoch = 0;
     
     for m = 2:M
        limit = (layerSizes(m-1)+1)^(1/2);
        W{m} = rand([layerSizes(m) (layerSizes(m-1)+1)])*2*limit - limit;
+       DeltaW{m} = zeros(layerSizes(m),(layerSizes(m-1)+1));
     end
     
+    DeltaWOld = DeltaW;
+    
+    Wold = W;
+    
     while(epoch ~= iterations && ~finish)
-       epoch = epoch+1;
+       epoch = epoch + 1;
        indexes = randperm(length(s));
        
        for i = indexes
@@ -65,25 +79,46 @@ function[W, meanErrors] = backpropagation(psi, s, n, error, iterations, hiddenLa
            
            %% step 6
            for m = 2:M    
-               W{m} = W{m} + n*Delta{m}*(V{m-1}');
+               %add momentum term
+               DeltaW{m} = n*Delta{m}*(V{m-1}') + (alfa * DeltaWOld{m});
+               W{m} = W{m} + DeltaW{m};
            end
-           
+           DeltaWOld = DeltaW;
            
            o(:,i) = V{M};
-           diff = o - s;
-           
-           if(abs(diff) < error)
+           currentError = mean(abs(o - s));
+           if(abs(o-s) < error)
                finish = true;
            end
-           
        end
        
-       meanErrors = [meanErrors mean(abs(diff))];
-       
+       meanErrors = [meanErrors mean(abs(o - s))];
+      
+       %error decreased
+       if(currentError < prevError)
+           
+           improvementCounter = improvementCounter + 1;
+           %if it improves consistently
+           if(improvementCounter >= maxImprovement)
+             n = n + a;
+             improvementCounter = 0;
+           end
+           
+       %error increased  
+       elseif(currentError > prevError)
+           improvementCounter = 0;
+           W = Wold;
+           n = n -(b*n);
+           alfa = 0;
+       end
+       Wold = W;
+       prevError = currentError;
+          
+        meanErrors = [meanErrors mean(abs(currentError))];
     end
-    epoch
-    quadraticMeanError = mean(diff.^2);
-    quadraticMeanError
+    disp(epoch);
+    quadraticMeanError = mean((s-o).^2);
+    disp(quadraticMeanError);
     disp(mean(abs(o-s)));
 
 end
