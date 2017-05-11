@@ -5,13 +5,14 @@
 %% g: transference function
 %% gDeriv: derivative of the transference function
 
-function[W] = momentumBackpropagation(psi, s, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer)
+function[W, meanErrors] = momentumBackpropagation(psi, s, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer)
 
     psi = psiNormalizer(psi);
     s = sNormalizer(s);
-    
+   
     layerSizes = [length(psi(1,:)) hiddenLayerSizes length(s(:,1))];
 
+    %amount of layers
     M = length(layerSizes);
 
     V = cell(1,M);
@@ -21,29 +22,40 @@ function[W] = momentumBackpropagation(psi, s, n, error, iterations, hiddenLayerS
     H = cell(1,M);
     
     Delta = cell(1,M);
-    o = zeros(length(s(:,1)),length(s));
     
-    diff = o - s;
+    o = zeros(length(s(:,1)),length(s));
    
     finish = false;
     
     alfa = 0.9;
     
+    DeltaW = cell(1,M);
+    
+    meanErrors = [];
+    
+    %initializing random weights
+    %initializing DeltaW with zeros
     for m = 2:M
-       W{m} = rand([layerSizes(m) (layerSizes(m-1)+1)]) - 0.5;
+       limit = (layerSizes(m-1)+1)^(1/2);
+       W{m} = rand([layerSizes(m) (layerSizes(m-1)+1)])*2*limit - limit;
+       DeltaW{m} = zeros(layerSizes(m),(layerSizes(m-1)+1));
     end
     
-    while(iterations > 0 && ~finish)
-       iterations = iterations - 1;
+    DeltaWOld = DeltaW;
+    
+    epoch = 0;
+    
+    while(epoch ~= iterations && ~finish)
+       epoch = epoch + 1;
        indexes = randperm(length(s));
-       
+      
        for i = indexes
           
-           %% paso 2
+           %% step 2
            V{1} = psi(i,:)';
            V{1} = [-1; V{1}];
            
-           %% paso 3
+           %% step 3
            for m = 2:M
                H{m} = W{m}*V{m-1};
                V{m} = g(H{m});
@@ -52,32 +64,35 @@ function[W] = momentumBackpropagation(psi, s, n, error, iterations, hiddenLayerS
                end
            end
            
-           %% paso 4
+           %% step 4
            Delta{M} = gDeriv(H{M}).*(s(:,i)-V{M});
            
-           %% paso 5
+           %% step 5
            for m = M:-1:3
               Delta{m-1} = gDeriv(H{m-1}).*(W{m}(:,2:end)'*Delta{m});
            end
            
-           %% paso 6
+           %% step 6
            for m = 2:M  
-               %%%?wpq(t+1)=?? ?E/? wpq +??wpq(t)
-               %% W{m} + n*Delta{m}*(V{m-1}');
-               %Delta{m} = -(n*Delta{m}*(V{m-1}')) + (alfa * Delta{m});
-               %W{m} = W{m} + Delta{m};
+               %add momentum term
+               DeltaW{m} = n*Delta{m}*(V{m-1}') + (alfa * DeltaWOld{m});
+               W{m} = W{m} + DeltaW{m};
+               
            end
-           
+           DeltaWOld = DeltaW;
            
            o(:,i) = V{M};
-           diff = o - s;
+           diff = abs(o - s);
            
-           if(abs(diff) < error)
+           if(diff < error)
                finish = true;
            end
            
        end
+       
+       
         
     end
+    epoch
 
 end

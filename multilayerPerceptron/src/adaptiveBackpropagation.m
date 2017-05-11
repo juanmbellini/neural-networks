@@ -23,25 +23,25 @@ function[W, meanErrors] = adaptiveBackpropagation(psi, s, n, error, iterations, 
     Delta = cell(1,M);
     o = zeros(length(s(:,1)),length(s));
     
-    currentError = mean(o - s);
-    prevError = mean(o -s);
-    counterError = 0;
-    maxErrorIterations = 5;
+    currentError = mean(abs(o - s));
+    prevError = currentError;
+    improvementCounter = 0;
+    maxImprovement = 1;
    
-    a=0.5;
-    b=0.5;
+    a=0.08;
+    b=0.3;
     
     finish = false;
     
     meanErrors = [];
     epoch = 0;
     
-    currentError = 0;
-    prevError = 0;
-    
     for m = 2:M
-       W{m} = rand([layerSizes(m) (layerSizes(m-1)+1)]) - 0.5;
+       limit = (layerSizes(m-1)+1)^(1/2);
+       W{m} = rand([layerSizes(m) (layerSizes(m-1)+1)])*2*limit - limit;
     end
+    
+    Wold = W;
     
     while(epoch ~= iterations && ~finish)
        epoch = epoch + 1;
@@ -49,11 +49,11 @@ function[W, meanErrors] = adaptiveBackpropagation(psi, s, n, error, iterations, 
        
        for i = indexes
           
-           %% paso 2
+           %% step 2
            V{1} = psi(i,:)';
            V{1} = [-1; V{1}];
            
-           %% paso 3
+           %% step 3
            for m = 2:M
                H{m} = W{m}*V{m-1};
                V{m} = g(H{m});
@@ -62,45 +62,46 @@ function[W, meanErrors] = adaptiveBackpropagation(psi, s, n, error, iterations, 
                end
            end
            
-           %% paso 4
+           %% step 4
            Delta{M} = gDeriv(H{M}).*(s(:,i)-V{M});
            
-           %% paso 5
+           %% step 5
            for m = M:-1:3
               Delta{m-1} = gDeriv(H{m-1}).*(W{m}(:,2:end)'*Delta{m});
            end
            
-           %% paso 6
+           %% step 6
            for m = 2:M    
                W{m} = W{m} + n*Delta{m}*(V{m-1}');
            end
            
-           
            o(:,i) = V{M};
-           currentError = mean(o - s);
-           
-           if(abs(o - s) < error)
+           currentError = mean(abs(o - s));
+           if(abs(o-s) < error)
                finish = true;
            end
-           
-           
-           
        end
        
        meanErrors = [meanErrors mean(abs(o - s))];
       
-       if(currentError > prevError)
-           counterError = counterError + 1;
-           if(counterError > maxErrorIterations)
-               n = n + a;
-               counterError = 0;
+       %error decreased
+       if(currentError < prevError)
+           
+           improvementCounter = improvementCounter + 1;
+           %if it improves consistently
+           if(improvementCounter >= maxImprovement)
+             n = n + a;
+             improvementCounter = 0;
            end
-       elseif(currentError - prevError < 0)
+           
+       %error increased  
+       elseif(currentError > prevError)
+           improvementCounter = 0;
+           W = Wold;
            n = n -(b*n);
-       else
-           n=0;
        end
-       %prevError = currentError;
+       Wold = W;
+       prevError = currentError;
           
         
     end
