@@ -1,14 +1,19 @@
 function [] = test(file)
 
+
     load(strcat('./nets/',file));
     
     total = length(s);
-    testedValues = zeros(total,1);
+    testingSize = length(sTest);
+    testedValues = zeros(testingSize,1);
+    for i = 1:testingSize
+       testedValues(i,1) = getOutputFromNet(psiTest(i,:), W, g, psiNormalizer, denormalizer);
+    end
     for i = 1:total
-       testedValues(i,1) = getOutputFromNet(psi(i,:), W, g, psiNormalizer, denormalizer);
+       allTestedValues(i,1) = getOutputFromNet(psi(i,:), W, g, psiNormalizer, denormalizer);
     end
     
-    plotAll(psi, s, trainingMeanErrors, testedValues);
+    plotAll(psi, s, trainingMeanErrors, testedValues, allTestedValues);
 
 end
 
