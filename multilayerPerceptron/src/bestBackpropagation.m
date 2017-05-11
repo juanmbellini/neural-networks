@@ -5,12 +5,12 @@
 %% g: transference function
 %% gDeriv: derivative of the transference function
 
-function[W, meanErrors] = bestBackpropagation(psi, s, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer, a, b, alfa)
+function[W, trainingMeanErrors, testingMeanErrors] = bestBackpropagation(psiTrain, psiTest, sTrain, sTest, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer, denormalizer, a, b, alfa)
 
     disp('best backpropagation');
     
-    psi = psiNormalizer(psi);
-    s = sNormalizer(s);
+    psi = psiNormalizer(psiTrain);
+    s = sNormalizer(sTrain);
     
     layerSizes = [length(psi(1,:)) hiddenLayerSizes length(s(:,1))];
 
@@ -29,15 +29,14 @@ function[W, meanErrors] = bestBackpropagation(psi, s, n, error, iterations, hidd
     prevError = currentError;
     improvementCounter = 0;
     maxImprovement = 1;
-   
-%     a=0.08;
-%     b=0.3;
     
     finish = false;
     
     DeltaW = cell(1,M);
     
-    meanErrors = [];
+    trainingMeanErrors = [];
+    testingMeanErrors = [];
+    
     epoch = 0;
     
     for m = 2:M
@@ -92,7 +91,8 @@ function[W, meanErrors] = bestBackpropagation(psi, s, n, error, iterations, hidd
            end
        end
        
-       meanErrors = [meanErrors mean(abs(o - s))];
+       trainingMeanErrors = [trainingMeanErrors mean(abs(currentError))];
+       testingMeanErrors = [testingMeanErrors mean(abs(sTest'-test(psiTest,sTest,W,g,psiNormalizer,denormalizer)))];
       
        %error decreased
        if(currentError < prevError)
@@ -114,7 +114,6 @@ function[W, meanErrors] = bestBackpropagation(psi, s, n, error, iterations, hidd
        Wold = W;
        prevError = currentError;
           
-        meanErrors = [meanErrors mean(abs(currentError))];
     end
     disp(epoch);
     quadraticMeanError = mean((s-o).^2);

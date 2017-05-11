@@ -5,12 +5,12 @@
 %% g: transference function
 %% gDeriv: derivative of the transference function
 
-function[W, meanErrors] = adaptiveBackpropagation(psi, s, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer, a, b)
+function[W, trainingMeanErrors, testingMeanErrors] = adaptiveBackpropagation(psiTrain, psiTest, sTrain, sTest, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer, denormalizer, a, b)
 
-    backpropagation('adaptive backpropagation');
+    disp('adaptive backpropagation');
 
-    psi = psiNormalizer(psi);
-    s = sNormalizer(s);
+    psi = psiNormalizer(psiTrain);
+    s = sNormalizer(sTrain);
     
     layerSizes = [length(psi(1,:)) hiddenLayerSizes length(s(:,1))];
 
@@ -30,12 +30,12 @@ function[W, meanErrors] = adaptiveBackpropagation(psi, s, n, error, iterations, 
     improvementCounter = 0;
     maxImprovement = 1;
    
-%     a=0.08;
-%     b=0.3;
     
     finish = false;
     
-    meanErrors = [];
+    trainingMeanErrors = [];
+    testingMeanErrors = [];
+    
     epoch = 0;
     
     for m = 2:M
@@ -84,7 +84,8 @@ function[W, meanErrors] = adaptiveBackpropagation(psi, s, n, error, iterations, 
            end
        end
        
-       meanErrors = [meanErrors mean(abs(o - s))];
+       trainingMeanErrors = [trainingMeanErrors mean(abs(currentError))];
+       testingMeanErrors = [testingMeanErrors mean(abs(sTest'-test(psiTest,sTest,W,g,psiNormalizer,denormalizer)))];
       
        %error decreased
        if(currentError < prevError)
@@ -103,9 +104,8 @@ function[W, meanErrors] = adaptiveBackpropagation(psi, s, n, error, iterations, 
            n = n -(b*n);
        end
        Wold = W;
-       prevError = currentError;
-          
-        meanErrors = [meanErrors mean(abs(currentError))];
+       prevError = currentError;     
+
     end
     disp(epoch);
     quadraticMeanError = mean((s-o).^2);

@@ -26,6 +26,7 @@ function[W, trainingMeanErrors, testingMeanErrors] = backpropagation(psiTrain, p
     o = zeros(length(s(:,1)),length(s));
     
     diff = o - s;
+    
     trainingMeanErrors = [];
     testingMeanErrors = [];
     
@@ -84,8 +85,9 @@ function[W, trainingMeanErrors, testingMeanErrors] = backpropagation(psiTrain, p
        
        
     end
-    epoch
+    disp(epoch);
     quadraticMeanError = mean(diff.^2);
-    quadraticMeanError
+    disp(quadraticMeanError);
+    disp(mean(abs(o-s)));
 
 end
