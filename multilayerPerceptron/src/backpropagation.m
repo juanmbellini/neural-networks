@@ -5,7 +5,7 @@
 %% g: transference function
 %% gDeriv: derivative of the transference function
 
-function[W, trainingMeanErrors, testingMeanErrors] = backpropagation(psiTrain, psiTest, sTrain, sTest, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer, denormalizer)
+function[W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] = backpropagation(psiTrain, psiTest, sTrain, sTest, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer, denormalizer)
 
     disp('backpropagation');
 
@@ -26,7 +26,6 @@ function[W, trainingMeanErrors, testingMeanErrors] = backpropagation(psiTrain, p
     o = zeros(length(s(:,1)),length(s));
     
     diff = o - s;
-    
     trainingMeanErrors = [];
     testingMeanErrors = [];
     
@@ -80,14 +79,12 @@ function[W, trainingMeanErrors, testingMeanErrors] = backpropagation(psiTrain, p
            
        end
        
-       trainingMeanErrors = [trainingMeanErrors mean(abs(diff))];
+       trainingMeanErrors = [trainingMeanErrors mean(abs(sTrain-denormalizer(o)))];
        testingMeanErrors = [testingMeanErrors mean(abs(sTest'-test(psiTest,sTest,W,g,psiNormalizer,denormalizer)))];
        
        
     end
-    disp(epoch);
-    quadraticMeanError = mean(diff.^2);
-    disp(quadraticMeanError);
-    disp(mean(abs(o-s)));
+    epoch
+    trainingQuadraticMeanError = mean(diff.^2);
 
 end

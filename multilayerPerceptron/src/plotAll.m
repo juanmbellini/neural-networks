@@ -4,7 +4,9 @@ function [] = plotAll(psi, s, trainingMeanErrors, testingMeanErrors, testedValue
     total = length(s);
     sTested = s(total-testedSize + 1:total);
 
+    meanError = mean((sTested-testedValues'));
     quadraticMeanError = mean((sTested-testedValues').^2);
+    meanError
     quadraticMeanError
 
     subplot(2,2,1);
