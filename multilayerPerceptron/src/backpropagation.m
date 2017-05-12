@@ -7,8 +7,6 @@
 
 function[W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] = backpropagation(psiTrain, psiTest, sTrain, sTest, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer, denormalizer)
 
-    disp('backpropagation');
-
     psi = psiNormalizer(psiTrain);
     s = sNormalizer(sTrain);
     
