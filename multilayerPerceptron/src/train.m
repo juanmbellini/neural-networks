@@ -49,7 +49,7 @@
                 randomIndexes = randperm(length(terrain));
                 terrain = terrain(randomIndexes,:);
 
-                trainingSize = patterns;
+                trainingSize = p;
                 s = terrain(:,3)';
                 total = length(s);
                 sTrain = s(:,1:trainingSize);

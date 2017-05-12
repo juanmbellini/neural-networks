@@ -36,4 +36,3 @@ function [] = plotAll(psi, s, trainingMeanErrors, testingMeanErrors, testedValue
 
 
 end
-
