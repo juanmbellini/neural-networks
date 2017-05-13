@@ -51,7 +51,7 @@ function[] = train(confFile)
             gDeriv = activationFunctions_.tangHypDeriv;
             psiNormalizer = normalizers_.entryTangHypNormalizerFromMinus4_4;
             sNormalizer = normalizers_.tangHypNormalizerFromMinus10_10;
-            denormalizer = denormalizers.tangHypDenormalizerToMinus10_10;
+            denormalizer = denormalizers_.tangHypDenormalizerToMinus10_10;
         otherwise
             disp('FATAL: Wrong activation function option');
             exit(1);
@@ -73,7 +73,7 @@ function[] = train(confFile)
         case 'momentum'
             disp('Training applying momentum improvement');
             [W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] = momentumBackpropagation(psiTrain, psiTest, sTrain, sTest, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer, denormalizer, alfa);
-        case 'adaptive'
+        case 'adaptative'
             disp('Training applying adaptative learning rate improvement');
             [W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] = adaptiveBackpropagation(psiTrain, psiTest, sTrain, sTest, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer, denormalizer, a, b);
         case 'adaptive_momentum'
@@ -86,5 +86,6 @@ function[] = train(confFile)
     end
     
     trainedNetwork = strcat('./nets/', trainedNetwork); % TODO: fixed directory?
+    trainedNetwork = strcat(trainedNetwork, '.mat');
     save(trainedNetwork,'W','trainingMeanErrors', 'testingMeanErrors','g','gDeriv','psiNormalizer','sNormalizer','denormalizer','trainingSize','s','psi','sTest','psiTest','sTrain','psiTrain', 'trainingQuadraticMeanError');
 end
