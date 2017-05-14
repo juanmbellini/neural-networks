@@ -1,8 +1,9 @@
 % Tests the given neural network and plots graphs
 % @param network_name The name of the network to be tested (must be under nets directory)
-function [] = testAndPlot(network_name)
+function [quadraticMeanError] = testAndPlot(network_name)
 
-    load(strcat('./nets/',network_name)); % Loads netowrk variables into wokspace
+    % load(strcat('./nets/',network_name)); % Loads netowrk variables into wokspace
+    load(network_name); % Loads netowrk variables into wokspace
     
     total = length(s);
     testingSize = length(sTest);
@@ -14,7 +15,8 @@ function [] = testAndPlot(network_name)
 
     % Plotting
     [testedSize, total, sTested, meanError, quadraticMeanError] = calculatePlottingVariables(psi, s, trainingMeanErrors, testingMeanErrors, testedValues, allTestedValues);
-    plotResults(testedValues, sTested, psi, allTestedValues, s, trainingMeanErrors, testingMeanErrors);
+    plotResults(testedValues, sTested, psi, allTestedValues, s, trainingMeanErrors, testingMeanErrors)
 
+    disp(strcat('Quadratic Mean Error is: ', num2str(quadraticMeanError)));
 end
 
