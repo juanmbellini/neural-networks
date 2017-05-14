@@ -9,6 +9,8 @@ function[W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] =
 
     disp('best backpropagation');
     
+    origAlfa = alfa;
+    
     psi = psiNormalizer(psiTrain);
     s = sNormalizer(sTrain);
     
@@ -93,7 +95,7 @@ function[W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] =
        
        %error decreased
        if(currentError < prevError)
-           
+           alfa=origAlfa;
            improvementCounter = improvementCounter + 1;
            %if it improves consistently
            if(improvementCounter >= maxImprovement)
@@ -115,7 +117,7 @@ function[W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] =
        
           
     end
-    epoch
+    disp(epoch);
     trainingQuadraticMeanError = mean((s-o).^2);
 
 end
