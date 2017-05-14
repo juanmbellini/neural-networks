@@ -84,9 +84,6 @@ function[W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] =
            end
        end
        
-       trainingMeanErrors = [trainingMeanErrors mean(abs(currentError))];
-       testingMeanErrors = [testingMeanErrors mean(abs(sTest'-test(psiTest,sTest,W,g,psiNormalizer,denormalizer)))];
-      
        %error decreased
        if(currentError < prevError)
            

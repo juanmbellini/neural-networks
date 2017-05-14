@@ -91,9 +91,6 @@ function[W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] =
            end
        end
        
-       trainingMeanErrors = [trainingMeanErrors mean(abs(currentError))];
-       testingMeanErrors = [testingMeanErrors mean(abs(sTest'-test(psiTest,sTest,W,g,psiNormalizer,denormalizer)))];
-      
        %error decreased
        if(currentError < prevError)
            
@@ -119,7 +116,6 @@ function[W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] =
           
     end
     epoch
-    trainingQuadraticMeanError = mean(diff.^2);
-    quadraticMeanError = mean((s-o).^2);
+    trainingQuadraticMeanError = mean((s-o).^2);
 
 end
