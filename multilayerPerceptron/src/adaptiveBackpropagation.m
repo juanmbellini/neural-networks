@@ -100,8 +100,12 @@ function[W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] =
        %error increased  
        elseif(currentError > prevError)
            improvementCounter = 0;
-           W = Wold;
-           n = n -(b*n);
+           if(rand > 0.5)
+              W = Wold;
+              n = n -(b*n); 
+           end
+           
+           
        end
        Wold = W;
        prevError = currentError;    
@@ -111,6 +115,6 @@ function[W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] =
 
     end
     epoch
-    trainingQuadraticMeanError = mean(diff.^2);
+    trainingQuadraticMeanError = mean(currentError.^2);
     quadraticMeanError = mean((s-o).^2);
 end
