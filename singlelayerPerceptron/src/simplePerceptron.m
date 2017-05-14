@@ -1,4 +1,4 @@
-function [w] = simplePerceptronAndOr(n, s)
+function [w] = simplePerceptron(n, s)
 
     psi = [ -1, 1, 1;
             -1, 1, -1;
@@ -18,8 +18,9 @@ function [w] = simplePerceptronAndOr(n, s)
             w = w + deltaw;
         end
         steps = steps + 1;
-        disp(o)
+%         disp(o)
         if(s == o)
+            s
             steps
             return
         end
