@@ -30,6 +30,8 @@ function[W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] =
     currentError = mean(abs(o - s));
     prevError = currentError;
     improvementCounter = 0;
+    
+    %%amount of iterations of improvent needed to change n (for adaptive n)
     maxImprovement = 1;
     
     finish = false;
@@ -50,6 +52,7 @@ function[W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] =
     
     DeltaWOld = DeltaW;
     
+    %save the old weights in case a step has to be undone
     Wold = W;
     
     while(epoch ~= iterations && ~finish)
