@@ -32,10 +32,10 @@ After running the script, networks will be created according to the configuratio
 #### Testing
 This script also defines a function that receives as an argument the location of a .mat file in which a "confs" variable is stored. This variable must be a cell containing the locations of the trained netowork files to be tested. Also, another argument is defines for this function. This second argument is the location in which to place a csv file with output data.
 After running the script, a csv file with quadratic mean errors of testing will be created, and plots will be saved.
-In order to work well, networks must be placed under ```multilayerPerceptron/src/nets/<aspect-to-be-tested>/<network-architecture>```. Not respecting this will avoid saving the plots.
+In order to work well, networks must be placed under ```multilayerPerceptron/src/nets/<aspect-to-be-tested>/<tested-value>```. Not respecting this will avoid saving the plots.
 
 Example of path of networks:
-Having your networks under ```multilayerPerceptron/src/nets/test-of-improvements/10_8_5_4_2``` will result in saving plots under ```multilayerPerceptron/src/figs/test-of-improvements/10_8_5_4_2```.
+Having your networks under ```multilayerPerceptron/src/nets/test-of-improvements/10_8_5_4_2``` will result in saving plots under ```multilayerPerceptron/src/figs/test-of-improvements/momentum```.
 
 
 ## Authors
