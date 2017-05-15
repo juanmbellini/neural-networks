@@ -1,14 +1,5 @@
-function [] = plotAll(psi, s, trainingMeanErrors, testingMeanErrors, testedValues, allTestedValues)
-    
-    testedSize = length(testedValues);
-    total = length(s);
-    sTested = s(total-testedSize + 1:total);
-
-    meanError = mean((sTested-testedValues'));
-    quadraticMeanError = mean((sTested-testedValues').^2);
-    meanError
-    quadraticMeanError
-
+% Function that actually plots testing results
+function[] = plotResults(testedValues, sTested, psi, allTestedValues, s, trainingMeanErrors, testingMeanErrors)
     subplot(2,2,1);
     plot(abs(testedValues' - sTested),'.b');
     title('Testing error');
@@ -33,6 +24,5 @@ function [] = plotAll(psi, s, trainingMeanErrors, testingMeanErrors, testedValue
     title('Mean error variation in testing');
     xlabel('epoch');
     ylabel('mean error');
-
 
 end
