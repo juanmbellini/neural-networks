@@ -5,7 +5,7 @@
 %% g: transference function
 %% gDeriv: derivative of the transference function
 
-function[W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] = backpropagation(psiTrain, psiTest, sTrain, sTest, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer, denormalizer)
+function[W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] = backpropagation(psiTrain, psiTest, sTrain, sTest, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer, denormalizer, showProgress)
 
     psi = psiNormalizer(psiTrain);
     s = sNormalizer(sTrain);
@@ -29,6 +29,7 @@ function[W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] =
     
     finish = false;
     epoch = 0;
+    showProgress = nargin == 14; % If nargin is 14, function was called using the showProgress value
     
     for m = 2:M
        limit = (layerSizes(m-1)+1)^(1/2);
@@ -53,6 +54,10 @@ function[W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] =
                  V{m} = [-1; V{m}];
                end
            end
+
+          if showProgress && mod(i, 100) == 0
+            plotTerrain(psi, o);
+          end
            
            %% step 4
            Delta{M} = gDeriv(H{M}).*(s(:,i)-V{M});

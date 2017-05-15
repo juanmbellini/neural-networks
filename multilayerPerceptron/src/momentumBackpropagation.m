@@ -5,7 +5,7 @@
 %% g: transference function
 %% gDeriv: derivative of the transference function
 
-function[W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] = momentumBackpropagation(psiTrain, psiTest, sTrain, sTest, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer, denormalizer, alfa)
+function[W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] = momentumBackpropagation(psiTrain, psiTest, sTrain, sTest, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer, denormalizer, alfa, showProgress)
 
     disp('momentum backpropagation');
 
@@ -28,6 +28,7 @@ function[W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] =
     o = zeros(length(s(:,1)),length(s));
    
     finish = false;
+    showProgress = nargin == 15; % If nargin is 15, function was called using the showProgress value
     
     DeltaW = cell(1,M);
     
@@ -64,6 +65,10 @@ function[W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] =
                  V{m} = [-1; V{m}];
                end
            end
+
+           if showProgress && mod(i, 100) == 0
+            plotTerrain(psi, o);
+          end
            
            %% step 4
            Delta{M} = gDeriv(H{M}).*(s(:,i)-V{M});

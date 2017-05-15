@@ -5,7 +5,7 @@
 %% g: transference function
 %% gDeriv: derivative of the transference function
 
-function[W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] = adaptiveBackpropagation(psiTrain, psiTest, sTrain, sTest, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer, denormalizer, a, b)
+function[W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] = adaptiveBackpropagation(psiTrain, psiTest, sTrain, sTest, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer, denormalizer, a, b, showProgress)
 
     disp('adaptive backpropagation');
 
@@ -32,6 +32,7 @@ function[W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] =
    
     
     finish = false;
+    showProgress = nargin == 16; % If nargin is 16, function was called using the showProgress value
     
     trainingMeanErrors = [];
     testingMeanErrors = [];
@@ -64,6 +65,10 @@ function[W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] =
                end
            end
            
+           if showProgress && mod(i, 100) == 0
+            plotTerrain(psi, o);
+          end
+
            %% step 4
            Delta{M} = gDeriv(H{M}).*(s(:,i)-V{M});
            

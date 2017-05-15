@@ -2,7 +2,9 @@
 % The trained netowrk will be saved according to configuration file
 %
 % @param confFile configuration file to load parameters.
-function[] = train(confFile)
+% @param showProgress indicates if training must show the learning progress of the trained network
+function[] = train(confFile, showProgress)
+
 
     % Set up of parameters
     if nargin == 0 % No configuration file
@@ -26,6 +28,8 @@ function[] = train(confFile)
         run(confFile) % Loads configuration file
         disp('Data loaded from configuration file :)');
     end
+
+    showProgress = nargin == 2;
 
     % Clear variables that might be used in configuration file
     clear terrain activationFunctions_ normalizers_ denormalizers_;
@@ -69,20 +73,20 @@ function[] = train(confFile)
     switch improvementMethod
         case ''
             disp('Training without improvements');
-            [W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] = backpropagation(psiTrain, psiTest, sTrain, sTest, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer, denormalizer);
+            [W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] = backpropagation(psiTrain, psiTest, sTrain, sTest, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer, denormalizer, showProgress);
         case 'momentum'
             disp('Training applying momentum improvement');
-            [W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] = momentumBackpropagation(psiTrain, psiTest, sTrain, sTest, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer, denormalizer, alfa);
+            [W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] = momentumBackpropagation(psiTrain, psiTest, sTrain, sTest, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer, denormalizer, alfa, showProgress);
         case 'adaptative'
             disp('Training applying adaptative learning rate improvement');
-            [W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] = adaptiveBackpropagation(psiTrain, psiTest, sTrain, sTest, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer, denormalizer, a, b);
+            [W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] = adaptiveBackpropagation(psiTrain, psiTest, sTrain, sTest, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer, denormalizer, a, b, showProgress);
         case 'adaptive_momentum'
             disp('Training applying momentum and adaptative learning rate improvement');
-            [W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] = bestBackpropagation(psiTrain, psiTest, sTrain, sTest, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer, denormalizer, a, b, alfa);
+            [W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] = bestBackpropagation(psiTrain, psiTest, sTrain, sTest, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer, denormalizer, a, b, alfa, showProgress);
         otherwise
             disp('WARNING: unknown improvement method');
             disp('Falling back to no improvement method\n');
-            [W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] = backpropagation(psiTrain, psiTest, sTrain, sTest, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer, denormalizer);
+            [W, trainingMeanErrors, testingMeanErrors, trainingQuadraticMeanError] = backpropagation(psiTrain, psiTest, sTrain, sTest, n, error, iterations, hiddenLayerSizes, g, gDeriv, psiNormalizer, sNormalizer, denormalizer, showProgress);
     end
     
     trainedNetwork = strcat('./nets/', trainedNetwork); % TODO: fixed directory?
